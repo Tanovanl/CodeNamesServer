@@ -21,12 +21,14 @@ public class PlayerController {
 
     @GetMapping("/user")
     public Player getPlayer(@RequestParam Integer id){
-        return codeNamesService.getUser(id);
+        return null;
+       // return codeNamesService.getUser(id);
     }
 
     @GetMapping("/game")
     public Game createGame(@RequestParam String prefix, @RequestParam String gameName, @RequestParam String player){
-        codeNamesService.createGame(prefix, gameName, player);
+        return codeNamesService.createGame(prefix, gameName, player);
+
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
