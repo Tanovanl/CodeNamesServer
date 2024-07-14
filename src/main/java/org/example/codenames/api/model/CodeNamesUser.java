@@ -1,7 +1,6 @@
 package org.example.codenames.api.model;
 
 public class CodeNamesUser {
-
     private GameId gameId;
     private String playerName;
 
