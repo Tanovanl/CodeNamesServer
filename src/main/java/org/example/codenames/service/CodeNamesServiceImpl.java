@@ -44,4 +44,23 @@ public class CodeNamesServiceImpl {
     public ResponseEntity<AllGamesResponse> getGames() {
         return new ResponseEntity<>(new AllGamesResponse(games), HttpStatus.OK);
     }
+
+    public ResponseEntity<GameCreateResponse> addPlayer(String gameId, String playerName) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        Player player = new Player(playerName, game.getGameIdObject(), Team.SPECTATOR);
+        game.addPlayer(player);
+        return new ResponseEntity<>(new GameCreateResponse(game, player.getPlayerName()), HttpStatus.CREATED);
+    }
+
+    private Game getGameById(String gameId) {
+        for (Game game : games) {
+            if (game.getGameId().toString().equals(gameId)) {
+                return game;
+            }
+        }
+        return null;
+    }
 }

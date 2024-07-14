@@ -1,5 +1,7 @@
 package org.example.codenames.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,11 @@ public class Game {
 
     public String getGameId(){
         return gameId.toString();
+    }
+
+    @JsonIgnore
+    public GameId getGameIdObject(){
+        return gameId;
     }
 
     public List<String> getPlayers() {

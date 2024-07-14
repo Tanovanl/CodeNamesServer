@@ -20,15 +20,14 @@ public class PlayerController {
         this.codeNamesService = playerService;
     }
 
-    @GetMapping("/user")
-    public Player getPlayer(@RequestParam Integer id){
-        return null;
-       // return codeNamesService.getUser(id);
-    }
-
     @PostMapping("/game")
     public ResponseEntity<GameCreateResponse> createGame(@RequestParam String prefix, @RequestParam String gameName, @RequestParam String player){
         return codeNamesService.createGame(prefix, gameName, player);
+    }
+
+    @PostMapping("/game/{gameId}/player/{playerName}")
+    public ResponseEntity<GameCreateResponse> addPlayer(@PathVariable String gameId, @PathVariable String playerName){
+        return codeNamesService.addPlayer(gameId, playerName);
     }
 
     @GetMapping("/games")
