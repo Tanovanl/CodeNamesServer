@@ -17,6 +17,18 @@ public class Game {
         return gameId.toString();
     }
 
+    public List<String> getPlayers() {
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : players) {
+            playerNames.add(player.getPlayerName());
+        }
+        return playerNames;
+    }
+
+    public void addPlayer(Player player){
+        players.add(player);
+    }
+
     @Override
     public String toString(){
         return gameId.toString();
