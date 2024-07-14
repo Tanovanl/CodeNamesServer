@@ -12,4 +12,9 @@ public class Player extends CodeNamesUser {
         return team;
     }
 
+
+    @Override
+    public String toString(){
+        return super.getPlayerName();
+    }
 }
