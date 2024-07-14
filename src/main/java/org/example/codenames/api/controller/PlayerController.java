@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Game;
 import org.example.codenames.api.model.Player;
+import org.example.codenames.api.web.Response.AllGamesResponse;
 import org.example.codenames.api.web.Response.GameCreateResponse;
 import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,8 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Game>> getGames(){
-        return codeNamesService.getGames();
+    public ResponseEntity<AllGamesResponse> getGames(){
+        return null;
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

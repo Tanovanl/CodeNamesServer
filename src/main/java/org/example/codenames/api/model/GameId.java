@@ -16,6 +16,7 @@ public class GameId {
         return prefix;
     }
 
+
     @Override
     public String toString() {
         return prefix + "-" + gameName;
@@ -34,7 +35,7 @@ public class GameId {
         return Objects.hash(toString());
     }
 
-    public Object getGameName() {
+    public String getGameName() {
         return gameName;
     }
 }
