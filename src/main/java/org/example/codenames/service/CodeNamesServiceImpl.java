@@ -41,7 +41,7 @@ public class CodeNamesServiceImpl {
         return new ResponseEntity<>(gameResponse, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<AllGamesResponse>> getGames() {
-        return null;
+    public ResponseEntity<AllGamesResponse> getGames() {
+        return new ResponseEntity<>(new AllGamesResponse(games), HttpStatus.OK);
     }
 }

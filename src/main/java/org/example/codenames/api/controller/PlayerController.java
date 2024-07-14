@@ -31,9 +31,9 @@ public class PlayerController {
         return codeNamesService.createGame(prefix, gameName, player);
     }
 
-    @GetMapping
+    @GetMapping("/games")
     public ResponseEntity<AllGamesResponse> getGames(){
-        return null;
+        return codeNamesService.getGames();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
