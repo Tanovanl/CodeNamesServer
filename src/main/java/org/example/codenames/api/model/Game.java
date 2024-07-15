@@ -10,10 +10,12 @@ public class Game {
 
     private final GameId gameId;
     private final List<Player> players;
+    private final Board board;
 
     public Game(GameId gameId) {
         this.gameId = gameId;
         this.players = new ArrayList<>();
+        board = new Board();
     }
 
     public Map<String, Object> getGameIdAndPlayers() {
@@ -21,6 +23,10 @@ public class Game {
             "gameId", gameId.toString(),
             "players", getPlayers()
         );
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public String getGameId(){

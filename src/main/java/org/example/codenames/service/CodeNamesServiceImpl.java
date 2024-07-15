@@ -6,6 +6,7 @@ import org.example.codenames.api.model.Player;
 import org.example.codenames.api.model.Team;
 import org.example.codenames.api.web.Response.AllGamesResponse;
 import org.example.codenames.api.web.Response.GameCreateResponse;
+import org.example.codenames.api.web.Response.GetCardsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -75,5 +76,13 @@ public class CodeNamesServiceImpl {
         }
         game.removePlayer(player);
         return new ResponseEntity<>(new GameCreateResponse(game, player.getPlayerName()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<GetCardsResponse> getBoard(String gameId) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        return new ResponseEntity<>(new GetCardsResponse(game.getBoard().cards), HttpStatus.OK);
     }
 }

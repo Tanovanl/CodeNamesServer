@@ -4,6 +4,7 @@ import org.example.codenames.api.model.Game;
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.web.Response.AllGamesResponse;
 import org.example.codenames.api.web.Response.GameCreateResponse;
+import org.example.codenames.api.web.Response.GetCardsResponse;
 import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,11 @@ public class PlayerController {
     @GetMapping("/games")
     public ResponseEntity<AllGamesResponse> getGames(){
         return codeNamesService.getGames();
+    }
+
+    @GetMapping("/game/{gameId}/board")
+    public ResponseEntity<GetCardsResponse> getBoard(@PathVariable String gameId){
+        return codeNamesService.getBoard(gameId);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
