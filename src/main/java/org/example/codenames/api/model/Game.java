@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
 
@@ -13,6 +14,13 @@ public class Game {
     public Game(GameId gameId) {
         this.gameId = gameId;
         this.players = new ArrayList<>();
+    }
+
+    public Map<String, Object> getGameIdAndPlayers() {
+        return Map.of(
+            "gameId", gameId.toString(),
+            "players", getPlayers()
+        );
     }
 
     public String getGameId(){
@@ -39,5 +47,18 @@ public class Game {
     @Override
     public String toString(){
         return gameId.toString();
+    }
+
+    public Player getPlayerByName(String playerName) {
+        for (Player player : players) {
+            if (player.getPlayerName().equals(playerName)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 }

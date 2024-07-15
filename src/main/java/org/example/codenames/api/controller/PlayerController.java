@@ -30,6 +30,11 @@ public class PlayerController {
         return codeNamesService.addPlayer(gameId, playerName);
     }
 
+    @DeleteMapping("/game/{gameId}/player/{playerName}")
+    public ResponseEntity<GameCreateResponse> removePlayer(@PathVariable String gameId, @PathVariable String playerName){
+        return codeNamesService.removePlayer(gameId, playerName);
+    }
+
     @GetMapping("/games")
     public ResponseEntity<AllGamesResponse> getGames(){
         return codeNamesService.getGames();

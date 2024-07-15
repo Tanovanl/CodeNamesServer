@@ -2,6 +2,8 @@ package org.example.codenames.api.web.Response;
 
 import org.example.codenames.api.model.Game;
 
+import java.util.Map;
+
 public class GameCreateResponse {
     private Game game;
     private String playerName;
@@ -11,8 +13,8 @@ public class GameCreateResponse {
         this.playerName = playerName;
     }
 
-    public Game getGame() {
-        return game;
+    public Map<String, Object> getGame() {
+        return game.getGameIdAndPlayers();
     }
 
     public String getPlayerName() {
