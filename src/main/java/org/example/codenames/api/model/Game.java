@@ -38,6 +38,10 @@ public class Game {
         return gameId;
     }
 
+    public List<Player> getPlayersObject(){
+        return players;
+    }
+
     public List<String> getPlayers() {
         List<String> playerNames = new ArrayList<>();
         for (Player player : players) {

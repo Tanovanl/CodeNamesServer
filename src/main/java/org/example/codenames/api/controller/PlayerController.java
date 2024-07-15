@@ -2,9 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Game;
 import org.example.codenames.api.model.Player;
-import org.example.codenames.api.web.Response.AllGamesResponse;
-import org.example.codenames.api.web.Response.GameCreateResponse;
-import org.example.codenames.api.web.Response.GetCardsResponse;
+import org.example.codenames.api.web.Response.*;
 import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +29,11 @@ public class PlayerController {
         return codeNamesService.addPlayer(gameId, playerName);
     }
 
+    @PostMapping("/game/{gameId}/player/{playerName}/team/{team}")
+    public ResponseEntity<TeamJoinResponse> addPlayer(@PathVariable String gameId, @PathVariable String playerName, @PathVariable String team){
+        return codeNamesService.addPlayer(gameId, playerName, team);
+    }
+
     @DeleteMapping("/game/{gameId}/player/{playerName}")
     public ResponseEntity<GameCreateResponse> removePlayer(@PathVariable String gameId, @PathVariable String playerName){
         return codeNamesService.removePlayer(gameId, playerName);
@@ -44,6 +47,11 @@ public class PlayerController {
     @GetMapping("/game/{gameId}/board")
     public ResponseEntity<GetCardsResponse> getBoard(@PathVariable String gameId){
         return codeNamesService.getBoard(gameId);
+    }
+
+    @GetMapping("/game/{gameId}")
+    public ResponseEntity<GetGameDetailsResponse> getGame(@PathVariable String gameId){
+        return codeNamesService.getGame(gameId);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

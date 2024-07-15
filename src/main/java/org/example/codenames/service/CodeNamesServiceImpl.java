@@ -4,9 +4,7 @@ import org.example.codenames.api.model.Game;
 import org.example.codenames.api.model.GameId;
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.model.Team;
-import org.example.codenames.api.web.Response.AllGamesResponse;
-import org.example.codenames.api.web.Response.GameCreateResponse;
-import org.example.codenames.api.web.Response.GetCardsResponse;
+import org.example.codenames.api.web.Response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -56,6 +54,24 @@ public class CodeNamesServiceImpl {
         return new ResponseEntity<>(new GameCreateResponse(game, player.getPlayerName()), HttpStatus.CREATED);
     }
 
+
+    public ResponseEntity<TeamJoinResponse> addPlayer(String gameId, String playerName, String team) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        if (game.getPlayerByName(playerName) == null) {
+            throw new IllegalArgumentException("Player doesn't exist in the game");
+        }
+        if (!team.equals("RED") && !team.equals("BLUE")) {
+            throw new IllegalArgumentException("Invalid team");
+        }
+
+        Player player = game.getPlayerByName(playerName);
+        player.setTeam(Team.valueOf(team));
+        return new ResponseEntity<>(new TeamJoinResponse(player.getTeam(), player.getRole(), playerName), HttpStatus.CREATED);
+    }
+
     private Game getGameById(String gameId) {
         for (Game game : games) {
             if (game.getGameId().toString().equals(gameId)) {
@@ -84,5 +100,13 @@ public class CodeNamesServiceImpl {
             throw new IllegalArgumentException("Game not found");
         }
         return new ResponseEntity<>(new GetCardsResponse(game.getBoard().cards), HttpStatus.OK);
+    }
+
+    public ResponseEntity<GetGameDetailsResponse> getGame(String gameId) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
     }
 }
