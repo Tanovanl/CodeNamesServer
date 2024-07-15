@@ -32,6 +32,7 @@ public class CodeNamesServiceImpl {
         Player player = new Player(playerName, gameId, Team.SPECTATOR);
         games.add(game);
         game.addPlayer(player);
+        player.setLeader(true);
 
         GameCreateResponse gameResponse = new GameCreateResponse(game, player.getPlayerName());
         return new ResponseEntity<>(gameResponse, HttpStatus.CREATED);

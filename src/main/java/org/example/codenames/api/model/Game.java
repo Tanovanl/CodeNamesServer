@@ -11,11 +11,13 @@ public class Game {
     private final GameId gameId;
     private final List<Player> players;
     private final Board board;
+    private boolean isStarted;
 
     public Game(GameId gameId) {
         this.gameId = gameId;
         this.players = new ArrayList<>();
         board = new Board();
+        isStarted = false;
     }
 
     public Map<String, Object> getGameIdAndPlayers() {
