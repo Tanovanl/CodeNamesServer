@@ -34,6 +34,11 @@ public class PlayerController {
         return codeNamesService.addPlayer(gameId, playerName, team);
     }
 
+    @PostMapping("/game/{gameId}/player/{playerName}/role/{role}")
+    public ResponseEntity<RoleJoinResponse> addRolePlayer(@PathVariable String gameId, @PathVariable String playerName, @PathVariable String role){
+        return codeNamesService.addRolePlayer(gameId, playerName, role);
+    }
+
     @DeleteMapping("/game/{gameId}/player/{playerName}")
     public ResponseEntity<GameCreateResponse> removePlayer(@PathVariable String gameId, @PathVariable String playerName){
         return codeNamesService.removePlayer(gameId, playerName);

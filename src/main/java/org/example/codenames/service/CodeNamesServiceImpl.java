@@ -1,9 +1,6 @@
 package org.example.codenames.service;
 
-import org.example.codenames.api.model.Game;
-import org.example.codenames.api.model.GameId;
-import org.example.codenames.api.model.Player;
-import org.example.codenames.api.model.Team;
+import org.example.codenames.api.model.*;
 import org.example.codenames.api.web.Response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +67,23 @@ public class CodeNamesServiceImpl {
         Player player = game.getPlayerByName(playerName);
         player.setTeam(Team.valueOf(team));
         return new ResponseEntity<>(new TeamJoinResponse(player.getTeam(), player.getRole(), playerName), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<RoleJoinResponse> addRolePlayer(String gameId, String playerName, String role) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        if (game.getPlayerByName(playerName) == null) {
+            throw new IllegalArgumentException("Player doesn't exist in the game");
+        }
+        if (!role.equals("OPERATIVE") && !role.equals("SPYMASTER")) {
+            throw new IllegalArgumentException("Invalid role");
+        }
+
+        Player player = game.getPlayerByName(playerName);
+        player.setRole(Role.valueOf(role));
+        return new ResponseEntity<>(new RoleJoinResponse(player.getTeam().toString(), player.getRole().toString(), playerName), HttpStatus.CREATED);
     }
 
     private Game getGameById(String gameId) {

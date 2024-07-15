@@ -7,7 +7,7 @@ public class Player extends CodeNamesUser {
     public Player(String playerName, GameId gameId, Team team){
         super(gameId, playerName);
         this.team = team;
-        this.role = Role.Operative;
+        this.role = Role.OPERATIVE;
     }
 
     public Team getTeam() {
