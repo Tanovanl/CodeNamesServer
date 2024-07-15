@@ -27,6 +27,15 @@ public class Game {
         );
     }
 
+    public void setIsStarted(boolean isStarted) {
+        if (hasRequiredPlayersAndRoles()) {
+            board.setUpCards();
+            this.isStarted = isStarted;
+        } else {
+            throw new IllegalArgumentException("Game cannot be started. Ensure there are players in both teams and each team has an operative and a spymaster.");
+        }
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -72,5 +81,34 @@ public class Game {
 
     public void removePlayer(Player player) {
         players.remove(player);
+    }
+
+    private boolean hasRequiredPlayersAndRoles() {
+        boolean hasRed = false;
+        boolean hasBlue = false;
+        boolean redHasOperative = false;
+        boolean redHasSpymaster = false;
+        boolean blueHasOperative = false;
+        boolean blueHasSpymaster = false;
+
+        for (Player player : players) {
+            if (player.getTeam() == Team.RED) {
+                hasRed = true;
+                if (player.getRole() == Role.OPERATIVE) {
+                    redHasOperative = true;
+                } else if (player.getRole() == Role.SPYMASTER) {
+                    redHasSpymaster = true;
+                }
+            } else if (player.getTeam() == Team.BLUE) {
+                hasBlue = true;
+                if (player.getRole() == Role.OPERATIVE) {
+                    blueHasOperative = true;
+                } else if (player.getRole() == Role.SPYMASTER) {
+                    blueHasSpymaster = true;
+                }
+            }
+        }
+
+        return hasRed && hasBlue && redHasOperative && redHasSpymaster && blueHasOperative && blueHasSpymaster;
     }
 }

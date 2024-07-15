@@ -124,4 +124,16 @@ public class CodeNamesServiceImpl {
         }
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
     }
+
+    public ResponseEntity<GetGameDetailsResponse> startGame(String gameId, String playerName) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        if (!game.getPlayerByName(playerName).getIsLeader()) {
+            throw new IllegalArgumentException("You are not allowed to start the game!");
+        }
+        game.setIsStarted(true);
+        return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
+    }
 }

@@ -29,6 +29,11 @@ public class PlayerController {
         return codeNamesService.addPlayer(gameId, playerName);
     }
 
+    @PostMapping("/game/{gameId}/start")
+    public ResponseEntity<GetGameDetailsResponse> startGame(@PathVariable String gameId, @RequestParam String playerName){
+        return codeNamesService.startGame(gameId, playerName);
+    }
+
     @PostMapping("/game/{gameId}/player/{playerName}/team/{team}")
     public ResponseEntity<TeamJoinResponse> addPlayer(@PathVariable String gameId, @PathVariable String playerName, @PathVariable String team){
         return codeNamesService.addPlayer(gameId, playerName, team);
