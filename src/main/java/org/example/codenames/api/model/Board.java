@@ -13,7 +13,6 @@ public class Board {
     public Board(){
         this.cards = null;
         alreadyUsedWords = new ArrayList<>();
-        setUpCards();
     }
 
     public List<Card> getCards(){
