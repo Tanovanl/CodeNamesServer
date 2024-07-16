@@ -19,6 +19,14 @@ public class GetGameDetailsResponse {
         this.cards = game.getBoard().getCards();
     }
 
+    public Team getWinner(){
+        return game.getWinner();
+    }
+
+    public Boolean getIsStarted(){
+        return game.getIsStarted();
+    }
+
     public Team getTurn(){
         return game.getTurnToGuess();
     }

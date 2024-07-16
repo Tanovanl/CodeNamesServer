@@ -144,4 +144,14 @@ public class Game {
     public void setTurnToGuess(Team team) {
         currentTurnToGuess = team;
     }
+
+    public Team getWinner() {
+        if (score.get(Team.RED) >= 6 || score.get(Team.BLUE) < 0) {
+            return Team.RED;
+        } else if (score.get(Team.BLUE) >= 6 || score.get(Team.RED) < 0){
+            return Team.BLUE;
+        } else {
+            return null;
+        }
+    }
 }
