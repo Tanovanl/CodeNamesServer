@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class CodeNamesServiceImpl {
 
         Player player = game.getPlayerByName(playerName);
         player.setRole(Role.valueOf(role));
-        return new ResponseEntity<>(new RoleJoinResponse(player.getTeam().toString(), player.getRole().toString(), playerName), HttpStatus.CREATED);
+        return new ResponseEntity<>(new RoleJoinResponse(playerName, player.getTeam().toString(), player.getRole().toString()), HttpStatus.CREATED);
     }
 
     private Game getGameById(String gameId) {
@@ -136,4 +137,52 @@ public class CodeNamesServiceImpl {
         game.setIsStarted(true);
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
     }
+
+    public ResponseEntity<GetGameDetailsResponse> guessCards(String gameId, String playerName, String card) {
+        Game game = getGameById(gameId);
+        Player player = game.getPlayerByName(playerName);
+
+        exceptionsCards(game, player, card);
+
+        game.getBoard().getCard(card).setIsRevealed(true);
+
+        if (player.getTeam().equals(game.getBoard().getCard(card).getColor())) {
+            game.setScore(player.getTeam(), 1);
+        } else if (game.getBoard().getCard(card).getColor().equals(CardColor.BLACK)) {
+            game.setScore(player.getTeam(), -100);
+            game.setIsStarted(false);
+        } else if (game.getBoard().getCard(card).getColor().equals(CardColor.GRAY)){
+            game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
+        } else {
+            game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
+            Team oppositeTeam = player.getTeam() == Team.RED ? Team.BLUE : Team.RED;
+            game.setScore(oppositeTeam, 1);
+        }
+        return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
+    }
+
+    private void exceptionsCards(Game game, Player player, String card) {
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        if (!game.getIsStarted()) {
+            throw new IllegalArgumentException("Game has not started yet");
+        }
+        if (player == null) {
+            throw new IllegalArgumentException("Player not found");
+        }
+        if (player.getRole() != Role.OPERATIVE) {
+            throw new IllegalArgumentException("Only operatives can guess cards");
+        }
+        if (player.getTeam() != game.getTurnToGuess()) {
+            throw new IllegalArgumentException("It is not your turn");
+        }
+        if (game.getBoard().getCard(card) == null) {
+            throw new IllegalArgumentException("Card not found");
+        }
+        if (game.getBoard().getCard(card).getIsRevealed()) {
+            throw new IllegalArgumentException("Card already revealed");
+        }
+    }
+
 }

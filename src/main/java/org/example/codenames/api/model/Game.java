@@ -2,7 +2,9 @@ package org.example.codenames.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,12 +14,31 @@ public class Game {
     private final List<Player> players;
     private final Board board;
     private boolean isStarted;
+    private Team currentTurnToGuess;
+    private Map<Team, Integer> score;
 
     public Game(GameId gameId) {
         this.gameId = gameId;
         this.players = new ArrayList<>();
         board = new Board();
+        currentTurnToGuess = null;
         isStarted = false;
+        setIsStarted(true); // remove
+        score = new HashMap<>();
+        score.put(Team.RED, 0);
+        score.put(Team.BLUE, 0);
+    }
+
+    public void setScore(Team team, int increment){
+        score.put(team, score.get(team) + increment);
+    }
+
+    public Map<Team, Integer> getScore(){
+        return score;
+    }
+
+    public Team getTurnToGuess(){
+        return currentTurnToGuess;
     }
 
     public Map<String, Object> getGameIdAndPlayers() {
@@ -28,12 +49,16 @@ public class Game {
     }
 
     public void setIsStarted(boolean isStarted) {
-        if (hasRequiredPlayersAndRoles()) {
-            board.setUpCards();
-            this.isStarted = isStarted;
-        } else {
-            throw new IllegalArgumentException("Game cannot be started. Ensure there are players in both teams and each team has an operative and a spymaster.");
-        }
+        board.setUpCards();
+        this.isStarted = isStarted;
+        currentTurnToGuess = Team.BLUE;
+//        if (hasRequiredPlayersAndRoles()) {
+//            board.setUpCards();
+//            this.isStarted = isStarted;
+//            currentTurnToGuess = Team.BLUE;
+//        } else {
+//            throw new IllegalArgumentException("Game cannot be started. Ensure there are players in both teams and each team has an operative and a spymaster.");
+//        }
     }
 
     public Board getBoard() {
@@ -110,5 +135,13 @@ public class Game {
         }
 
         return hasRed && hasBlue && redHasOperative && redHasSpymaster && blueHasOperative && blueHasSpymaster;
+    }
+
+    public boolean getIsStarted() {
+        return isStarted;
+    }
+
+    public void setTurnToGuess(Team team) {
+        currentTurnToGuess = team;
     }
 }

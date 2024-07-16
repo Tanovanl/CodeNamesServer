@@ -1,5 +1,7 @@
 package org.example.codenames.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Card {
     public CardColor color;
     public String word;
@@ -22,5 +24,14 @@ public class Card {
     @Override
     public String toString(){
         return word + " " + color.toString() + " " + revealed;
+    }
+
+    @JsonIgnore
+    public boolean getIsRevealed() {
+        return revealed;
+    }
+
+    public void setIsRevealed(boolean revealed) {
+        this.revealed = revealed;
     }
 }

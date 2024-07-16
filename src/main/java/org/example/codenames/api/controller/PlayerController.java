@@ -64,6 +64,11 @@ public class PlayerController {
         return codeNamesService.getGame(gameId);
     }
 
+    @PostMapping("/game/{gameId}")
+    public ResponseEntity<GetGameDetailsResponse> guessCard(@PathVariable String gameId, @RequestParam String playerName, @RequestParam String card){
+        return codeNamesService.guessCards(gameId, playerName, card);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

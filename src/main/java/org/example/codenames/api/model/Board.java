@@ -55,4 +55,13 @@ public class Board {
         alreadyUsedWords.add(randomWord);
         return randomWord;
     }
+
+    public Card getCard(String card) {
+        for (Card c : cards) {
+            if (c.getWord().equals(card)) {
+                return c;
+            }
+        }
+        return null;
+    }
 }
