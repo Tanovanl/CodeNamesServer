@@ -41,6 +41,7 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/spring-api:latest
 
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
