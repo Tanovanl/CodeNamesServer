@@ -60,7 +60,7 @@ jobs:
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
         chmod 600 id_rsa
-        ssh -o StrictHostKeyChecking=no -i id_rsa user@${{ secrets.HOSTNAME }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i id_rsa root@${{ secrets.HOSTNAME }} << 'EOF'
           docker pull ${{ secrets.DOCKER_USERNAME }}/spring-api:latest
           docker stop spring-api || true
           docker rm spring-api || true
