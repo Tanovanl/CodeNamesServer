@@ -4,6 +4,7 @@ FROM openjdk:17-jdk-alpine
 # Add Maintainer Info
 LABEL maintainer="tano.vanlerberghe@gmail.com"
 
+
 # Add a volume pointing to /tmp
 VOLUME /tmp
 
