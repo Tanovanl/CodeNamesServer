@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Board {
-    private final int BOARD_SIZE = 25;
+    private final int MAX_POINTS = 8;
     private List<String> alreadyUsedWords;
     public List<Card> cards;
 
@@ -21,11 +21,11 @@ public class Board {
 
     public void setUpCards(){
         List<CardColor> colors = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MAX_POINTS; i++) {
             colors.add(CardColor.BLUE);
             colors.add(CardColor.RED);
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < MAX_POINTS; i++) {
             colors.add(CardColor.GRAY);
         }
         colors.add(CardColor.BLACK);
