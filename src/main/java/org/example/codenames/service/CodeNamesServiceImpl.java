@@ -188,4 +188,12 @@ public class CodeNamesServiceImpl {
         }
     }
 
+    public ResponseEntity<Player> getPlayer(String gameId, String playerName) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        Player player = game.getPlayerByName(playerName);
+        return new ResponseEntity<>(player, HttpStatus.OK);
+    }
 }
