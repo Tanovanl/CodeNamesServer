@@ -41,7 +41,7 @@ public class Board {
     private String getRandomCardWord(){
         List<String> words = new ArrayList<>();
         try {
-            words = Files.readAllLines(Paths.get("src/main/java/org/example/codenames/api/original.txt"));
+            words = Files.readAllLines(Paths.get("src/main/resources/original.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
