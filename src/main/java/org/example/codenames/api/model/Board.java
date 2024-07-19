@@ -1,6 +1,9 @@
 package org.example.codenames.api.model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -40,8 +43,12 @@ public class Board {
 
     private String getRandomCardWord(){
         List<String> words = new ArrayList<>();
-        try {
-            words = Files.readAllLines(Paths.get("original.txt"));
+        try (InputStream in = getClass().getResourceAsStream("/original.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                words.add(line);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
