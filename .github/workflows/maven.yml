@@ -22,8 +22,6 @@ jobs:
         check-latest: false
         server-id: github
 
-    - name: Build with Gradle
-      run: ./gradlew build
 
     - name: Run Application
       run: ./gradlew bootRun
