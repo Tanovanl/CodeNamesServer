@@ -22,9 +22,10 @@ jobs:
         check-latest: false
         server-id: github
 
-
     - name: Run Application
-      run: ./gradlew bootRun
+      run: |
+        chmod +x ./gradlew
+        ./gradlew bootRun
 
 
     - name: Log in to Docker Hub
