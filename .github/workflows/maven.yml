@@ -22,8 +22,10 @@ jobs:
         check-latest: false
         server-id: github
 
-    - name: Build with Maven
-      run: mvn clean package
+    - name: build Application
+      run: |
+        chmod +x ./gradlew
+        ./gradlew build
 
 
     - name: Log in to Docker Hub

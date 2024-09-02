@@ -1,14 +1,10 @@
 package org.example.codenames.api.controller;
 
-import org.example.codenames.api.model.Game;
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.web.Response.*;
 import org.example.codenames.service.CodeNamesServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class PlayerController {
@@ -18,6 +14,7 @@ public class PlayerController {
     public PlayerController(CodeNamesServiceImpl playerService){
         this.codeNamesService = playerService;
     }
+
 
     @PostMapping("/game")
     public ResponseEntity<GameCreateResponse> createGame(@RequestParam String prefix, @RequestParam String gameName, @RequestParam String player){

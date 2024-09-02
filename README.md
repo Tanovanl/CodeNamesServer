@@ -2,6 +2,8 @@
 
 This repository contains the server-side code for the Codenames game. The project is currently a work in progress and is being developed by a single developer.
 
+- You can visit the client at: https://github.com/Tanovanl/CodeNamesClient
+
 ## Project Overview
 
 Codenames is a popular board game where players guess which words in a set are related to a hint-word given by another player. This project aims to create a server for the game, allowing players to connect and play together.
