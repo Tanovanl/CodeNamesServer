@@ -23,7 +23,6 @@ public class Game {
         board = new Board();
         currentTurnToGuess = null;
         isStarted = false;
-        setIsStarted(true); // remove
         score = new HashMap<>();
         score.put(Team.RED, 0);
         score.put(Team.BLUE, 0);
