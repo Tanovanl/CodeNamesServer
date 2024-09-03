@@ -47,9 +47,12 @@ public class Game {
         );
     }
 
+    private boolean canStartGame() {
+        return players.size() >= 4;
+    }
+
     public void setIsStarted(boolean isStarted) {
         board.setUpCards();
-        this.isStarted = isStarted;
         currentTurnToGuess = Team.BLUE;
         if (hasRequiredPlayersAndRoles()) {
             board.setUpCards();
@@ -87,6 +90,9 @@ public class Game {
 
     public void addPlayer(Player player){
         players.add(player);
+        if (canStartGame()){
+            setIsStarted(true);
+        }
     }
 
     @Override
