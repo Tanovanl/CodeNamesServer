@@ -52,13 +52,13 @@ public class Game {
         board.setUpCards();
         this.isStarted = isStarted;
         currentTurnToGuess = Team.BLUE;
-//        if (hasRequiredPlayersAndRoles()) {
-//            board.setUpCards();
-//            this.isStarted = isStarted;
-//            currentTurnToGuess = Team.BLUE;
-//        } else {
-//            throw new IllegalArgumentException("Game cannot be started. Ensure there are players in both teams and each team has an operative and a spymaster.");
-//        }
+        if (hasRequiredPlayersAndRoles()) {
+            board.setUpCards();
+            this.isStarted = isStarted;
+            currentTurnToGuess = Team.BLUE;
+        } else {
+            throw new IllegalArgumentException("Game cannot be started. Ensure there are players in both teams and each team has an operative and a spymaster.");
+        }
     }
 
     public Board getBoard() {
