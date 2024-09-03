@@ -51,6 +51,9 @@ public class CodeNamesServiceImpl {
         if (game == null) {
             throw new IllegalArgumentException("Game not found");
         }
+        if (game.getPlayers().contains(playerName)) {
+            throw new IllegalArgumentException("Player already exists in the game");
+        }
         Player player = new Player(playerName, game.getGameIdObject(), Team.SPECTATOR);
         game.addPlayer(player);
         return new ResponseEntity<>(new GameCreateResponse(game, player.getPlayerName()), HttpStatus.CREATED);
