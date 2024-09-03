@@ -89,10 +89,13 @@ public class Game {
     }
 
     public void addPlayer(Player player){
-        players.add(player);
-        if (canStartGame()){
-            setIsStarted(true);
+        if  (isStarted) {
+            throw new IllegalArgumentException("Game has already started");
         }
+        if (players.size() >= 4) {
+            throw new IllegalArgumentException("Game is full");
+        }
+        players.add(player);
     }
 
     @Override
