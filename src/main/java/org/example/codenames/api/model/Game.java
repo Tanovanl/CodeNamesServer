@@ -116,7 +116,7 @@ public class Game {
         players.remove(player);
     }
 
-    private boolean hasRequiredPlayersAndRoles() {
+    public boolean hasRequiredPlayersAndRoles() {
         boolean hasRed = false;
         boolean hasBlue = false;
         boolean redHasOperative = false;

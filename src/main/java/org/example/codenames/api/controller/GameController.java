@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Game;
 import org.example.codenames.api.web.Request.CreateGameRequest;
+import org.example.codenames.api.web.Request.StartGameRequest;
 import org.example.codenames.api.web.Response.AllGamesResponse;
 import org.example.codenames.api.web.Response.GameCreateResponse;
 import org.example.codenames.api.web.Response.GetCardsResponse;
@@ -27,8 +28,8 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/start")
-    public ResponseEntity<GetGameDetailsResponse> startGame(@PathVariable String gameId, @RequestParam String playerName){
-        return codeNamesService.startGame(gameId, playerName);
+    public ResponseEntity<GetGameDetailsResponse> startGame(@RequestBody StartGameRequest request, @PathVariable String gameId){
+        return codeNamesService.startGame(gameId, request.getPlayerName());
     }
 
 

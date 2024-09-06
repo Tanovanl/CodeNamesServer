@@ -138,6 +138,9 @@ public class CodeNamesServiceImpl {
         if (!game.getPlayerByName(playerName).getIsLeader()) {
             throw new IllegalArgumentException("You are not allowed to start the game!");
         }
+        if (!game.hasRequiredPlayersAndRoles()) {
+            throw new IllegalArgumentException("Game does not have the required players and roles");
+        }
         game.setIsStarted(true);
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
     }
