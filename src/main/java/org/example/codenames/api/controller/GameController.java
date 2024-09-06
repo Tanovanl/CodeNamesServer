@@ -11,9 +11,7 @@ import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/game")
 public class GameController {
 
     private CodeNamesServiceImpl codeNamesService;
@@ -22,34 +20,32 @@ public class GameController {
         this.codeNamesService = codeNamesService;
     }
 
-    @PostMapping
+    @PostMapping("/game")
     public ResponseEntity<GameCreateResponse> createGame(@RequestBody CreateGameRequest request){
         return codeNamesService.createGame(request.getPrefix(), request.getGameName(), request.getPlayer());
     }
 
-    @PostMapping("/{gameId}/start")
+    @PostMapping("/game/{gameId}/start")
     public ResponseEntity<GetGameDetailsResponse> startGame(@RequestBody StartGameRequest request, @PathVariable String gameId){
         return codeNamesService.startGame(gameId, request.getPlayerName());
     }
 
-
     @GetMapping("/games")
-    @RequestMapping(path = "/games", method = RequestMethod.GET)
     public ResponseEntity<AllGamesResponse> getGames(){
         return codeNamesService.getGames();
     }
 
-    @GetMapping("/{gameId}/board")
+    @GetMapping("/game/{gameId}/board")
     public ResponseEntity<GetCardsResponse> getBoard(@PathVariable String gameId){
         return codeNamesService.getBoard(gameId);
     }
 
-    @GetMapping("/{gameId}")
+    @GetMapping("/game/{gameId}")
     public ResponseEntity<GetGameDetailsResponse> getGame(@PathVariable String gameId){
         return codeNamesService.getGame(gameId);
     }
 
-    @PostMapping("/{gameId}")
+    @PostMapping("/game/{gameId}")
     public ResponseEntity<GetGameDetailsResponse> guessCard(@PathVariable String gameId, @RequestParam String playerName, @RequestParam String card){
         return codeNamesService.guessCards(gameId, playerName, card);
     }
