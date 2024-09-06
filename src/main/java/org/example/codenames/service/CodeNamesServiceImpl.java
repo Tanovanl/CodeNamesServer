@@ -19,8 +19,6 @@ public class CodeNamesServiceImpl {
     private final List<Game> games = new ArrayList<>();
 
 
-
-
     private void checkIfGameExists(GameId gameId) {
         for (Game game : games) {
             if (game.getGameId().toString().equals(gameId.toString())) {
