@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Game;
 import org.example.codenames.api.web.Request.CreateGameRequest;
+import org.example.codenames.api.web.Request.GuessCardRequest;
 import org.example.codenames.api.web.Request.StartGameRequest;
 import org.example.codenames.api.web.Response.AllGamesResponse;
 import org.example.codenames.api.web.Response.GameCreateResponse;
@@ -46,7 +47,7 @@ public class GameController {
     }
 
     @PostMapping("/game/{gameId}")
-    public ResponseEntity<GetGameDetailsResponse> guessCard(@PathVariable String gameId, @RequestParam String playerName, @RequestParam String card){
-        return codeNamesService.guessCards(gameId, playerName, card);
+    public ResponseEntity<GetGameDetailsResponse> guessCard(@PathVariable String gameId, @RequestBody GuessCardRequest request){
+        return codeNamesService.guessCards(gameId, request.getPlayerName(), request.getCardName());
     }
 }
