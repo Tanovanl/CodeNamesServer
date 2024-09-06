@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.awt.*;
@@ -133,13 +134,17 @@ public class CodeNamesServiceImpl {
     public ResponseEntity<GetGameDetailsResponse> startGame(String gameId, String playerName) {
         Game game = getGameById(gameId);
         if (game == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
-        if (!game.getPlayerByName(playerName).getIsLeader()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        Player player = game.getPlayerByName(playerName);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found");
+        }
+        if (!player.getIsLeader()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the leader can start the game");
         }
         if (!game.hasRequiredPlayersAndRoles()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The game does not have the required players and roles");
         }
         game.setIsStarted(true);
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
