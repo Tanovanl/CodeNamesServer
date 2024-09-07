@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.web.Request.AddPlayerRequest;
+import org.example.codenames.api.web.Request.TeamJoinRequest;
 import org.example.codenames.api.web.Response.*;
 import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,9 @@ public class PlayerController {
         return codeNamesService.getPlayer(gameId, playerName);
     }
 
-    @PostMapping("/{gameId}/player/{playerName}/team/{team}")
-    public ResponseEntity<TeamJoinResponse> addPlayer(@PathVariable String gameId, @PathVariable String playerName, @PathVariable String team){
-        return codeNamesService.addPlayer(gameId, playerName, team);
+    @PostMapping("/{gameId}/player/team")
+    public ResponseEntity<TeamJoinResponse> addPlayer(@PathVariable String gameId, @RequestBody TeamJoinRequest request){
+        return codeNamesService.addPlayer(gameId, request.getPlayer(), request.getTeam());
     }
 
     @PostMapping("/{gameId}/player/{playerName}/role/{role}")
