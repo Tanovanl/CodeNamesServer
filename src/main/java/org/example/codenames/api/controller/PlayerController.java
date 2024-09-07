@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.web.Request.AddPlayerRequest;
+import org.example.codenames.api.web.Request.GameLeaveRequest;
 import org.example.codenames.api.web.Request.RoleJoinRequest;
 import org.example.codenames.api.web.Request.TeamJoinRequest;
 import org.example.codenames.api.web.Response.*;
@@ -39,9 +40,9 @@ public class PlayerController {
         return codeNamesService.addRolePlayer(gameId, request.getPlayer(), request.getRole());
     }
 
-    @DeleteMapping("/{gameId}/player/{playerName}")
-    public ResponseEntity<GameCreateResponse> removePlayer(@PathVariable String gameId, @PathVariable String playerName){
-        return codeNamesService.removePlayer(gameId, playerName);
+    @DeleteMapping("/{gameId}/player/leave")
+    public ResponseEntity<GameCreateResponse> removePlayer(@PathVariable String gameId, @RequestBody GameLeaveRequest request){
+        return codeNamesService.removePlayer(gameId, request.getPlayer());
     }
 
 
