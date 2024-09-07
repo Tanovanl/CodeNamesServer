@@ -2,6 +2,7 @@ package org.example.codenames.api.controller;
 
 import org.example.codenames.api.model.Player;
 import org.example.codenames.api.web.Request.AddPlayerRequest;
+import org.example.codenames.api.web.Request.RoleJoinRequest;
 import org.example.codenames.api.web.Request.TeamJoinRequest;
 import org.example.codenames.api.web.Response.*;
 import org.example.codenames.service.CodeNamesServiceImpl;
@@ -33,9 +34,9 @@ public class PlayerController {
         return codeNamesService.addPlayer(gameId, request.getPlayer(), request.getTeam());
     }
 
-    @PostMapping("/{gameId}/player/{playerName}/role/{role}")
-    public ResponseEntity<RoleJoinResponse> addRolePlayer(@PathVariable String gameId, @PathVariable String playerName, @PathVariable String role){
-        return codeNamesService.addRolePlayer(gameId, playerName, role);
+    @PostMapping("/{gameId}/player/role")
+    public ResponseEntity<RoleJoinResponse> addRolePlayer(@PathVariable String gameId, @RequestBody RoleJoinRequest request){
+        return codeNamesService.addRolePlayer(gameId, request.getPlayer(), request.getRole());
     }
 
     @DeleteMapping("/{gameId}/player/{playerName}")
