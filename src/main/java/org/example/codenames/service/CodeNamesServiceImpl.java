@@ -105,11 +105,11 @@ public class CodeNamesServiceImpl {
     public ResponseEntity<GameCreateResponse> removePlayer(String gameId, String playerName) {
         Game game = getGameById(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("Game not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
         Player player = game.getPlayerByName(playerName);
         if (player == null) {
-            throw new IllegalArgumentException("Player not found");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Player not found");
         }
         game.removePlayer(player);
         return new ResponseEntity<>(new GameCreateResponse(game, player.getPlayerName()), HttpStatus.OK);
