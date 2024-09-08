@@ -22,8 +22,9 @@ public class CodeNamesServiceImpl {
 
     private void checkIfGameExists(GameId gameId) {
         for (Game game : games) {
-            if (game.getGameId().toString().equals(gameId.toString())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already exists");            }
+            if (game.getGameId().equals(gameId.toString())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already exists");
+            }
         }
     }
 
@@ -47,10 +48,10 @@ public class CodeNamesServiceImpl {
     public ResponseEntity<GameCreateResponse> addPlayer(String gameId, String playerName) {
         Game game = getGameById(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("Game not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not found");
         }
         if (game.getPlayers().contains(playerName)) {
-            throw new IllegalArgumentException("Player already exists in the game");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player already exists in the game");
         }
         Player player = new Player(playerName, game.getGameIdObject(), Team.SPECTATOR);
         game.addPlayer(player);
