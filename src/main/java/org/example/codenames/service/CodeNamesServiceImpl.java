@@ -23,8 +23,7 @@ public class CodeNamesServiceImpl {
     private void checkIfGameExists(GameId gameId) {
         for (Game game : games) {
             if (game.getGameId().toString().equals(gameId.toString())) {
-                throw new IllegalArgumentException("Game already exists");
-            }
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already exists");            }
         }
     }
 
