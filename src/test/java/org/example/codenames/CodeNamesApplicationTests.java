@@ -64,4 +64,13 @@ class CodeNamesApplicationTests {
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
 
+
+        @Test
+        void shouldReturnErrorBecauseGameDoesNotExist(){
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/thisdoesntexist/join", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
 }
