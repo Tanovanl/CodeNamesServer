@@ -73,4 +73,32 @@ class CodeNamesApplicationTests {
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
 
+        @Test
+        void shouldReturnErrorBecauseGameIsFull(){
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano1");
+
+                ResponseEntity<String> response = restTemplate.postForEntity("/game", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+                request = new CreateGameRequest("test", "01", "Tano2");
+
+                response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+                request = new CreateGameRequest("test", "01", "Tano3");
+
+                response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+                request = new CreateGameRequest("test", "01", "Tano4");
+
+                response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+
+                request = new CreateGameRequest("test", "01", "Tano");
+
+                response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
 }

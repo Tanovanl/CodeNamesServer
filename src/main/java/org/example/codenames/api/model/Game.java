@@ -1,6 +1,8 @@
 package org.example.codenames.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -91,10 +93,10 @@ public class Game {
 
     public void addPlayer(Player player){
         if  (isStarted) {
-            throw new IllegalArgumentException("Game has already started");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game already started");
         }
         if (players.size() >= 4) {
-            throw new IllegalArgumentException("Game is full");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game is full");
         }
         players.add(player);
     }
