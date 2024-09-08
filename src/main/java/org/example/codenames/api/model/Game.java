@@ -17,6 +17,7 @@ public class Game {
     private Team currentTurnToGuess;
     private Map<Team, Integer> score;
 
+
     public Game(GameId gameId) {
         this.gameId = gameId;
         this.players = new ArrayList<>();
