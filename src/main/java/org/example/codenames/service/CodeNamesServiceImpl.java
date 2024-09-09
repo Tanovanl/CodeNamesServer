@@ -142,7 +142,7 @@ public class CodeNamesServiceImpl {
         }
         Player player = game.getPlayerByName(playerName);
         if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player not found");
         }
         if (!player.getIsLeader()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the leader can start the game");

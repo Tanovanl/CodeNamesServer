@@ -2,10 +2,7 @@ package org.example.codenames;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import org.example.codenames.api.web.Request.CreateGameRequest;
-import org.example.codenames.api.web.Request.RoleJoinRequest;
-import org.example.codenames.api.web.Request.StartGameRequest;
-import org.example.codenames.api.web.Request.TeamJoinRequest;
+import org.example.codenames.api.web.Request.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -176,5 +173,54 @@ class CodeNamesApplicationTests {
                 teamBlueJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER", "Tano3");
                 response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DirtiesContext
+        void shouldBeAbleToStartGame(){
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+                restTemplate.postForEntity("/game", request, String.class);
+                TeamJoinRequest teamJoinRequest = new TeamJoinRequest("RED", "SPYMASTER", "Tano");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                // Cannot start game with only one player
+                StartGameRequest startGameRequest = new StartGameRequest("Tano");
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+                AddPlayerRequest playerAddRequest = new AddPlayerRequest("Tano2");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("RED", "OPERATIVE", "Tano2");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                playerAddRequest = new AddPlayerRequest("Tano3");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER", "Tano3");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                playerAddRequest = new AddPlayerRequest("Tano4");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("BLUE", "OPERATIVE", "Tano4");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                //  Cant start game which doesn't exist
+                startGameRequest = new StartGameRequest("Tano");
+                response = restTemplate.postForEntity("/game/DOESNTEXIST/start", startGameRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+                // Player not in game cannot start the game
+                startGameRequest = new StartGameRequest("DOESNTEXIST");
+                response = restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+
+                // Only leader can start the game
+                startGameRequest = new StartGameRequest("Tano2");
+                response = restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+
+                // Leader can start the game
+                startGameRequest = new StartGameRequest("Tano");
+                response = restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
 }
