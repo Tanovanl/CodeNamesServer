@@ -62,13 +62,16 @@ public class CodeNamesServiceImpl {
     public ResponseEntity<TeamJoinResponse> joinTeam(String gameId, String playerName, String team, String role) {
         Game game = getGameById(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("Game not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not found");
         }
         if (game.getPlayerByName(playerName) == null) {
-            throw new IllegalArgumentException("Player doesn't exist in the game");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player doesn't exist in the game");
         }
         if (!team.equals("RED") && !team.equals("BLUE")) {
-            throw new IllegalArgumentException("Invalid team");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid team");
+        }
+        if (!role.equals("OPERATIVE") && !role.equals("SPYMASTER")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid role");
         }
 
         Player player = game.getPlayerByName(playerName);
