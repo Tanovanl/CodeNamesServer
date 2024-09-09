@@ -3,6 +3,9 @@ package org.example.codenames;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.example.codenames.api.web.Request.CreateGameRequest;
+import org.example.codenames.api.web.Request.RoleJoinRequest;
+import org.example.codenames.api.web.Request.StartGameRequest;
+import org.example.codenames.api.web.Request.TeamJoinRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -100,5 +103,26 @@ class CodeNamesApplicationTests {
 
                 response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        void shouldReturnTeamJoinedREDAndSpyMaster(){
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+
+                ResponseEntity<String> response = restTemplate.postForEntity("/game", request, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+                TeamJoinRequest teamRedJoinRequest = new TeamJoinRequest("RED", "SPYMASTER", "Tano");
+                response = restTemplate.postForEntity("/game/test-01/player/team", teamRedJoinRequest, String.class);
+
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+                String team = documentContext.read("$.team");
+                String role = documentContext.read("$.role");
+                String playerName = documentContext.read("$.playerName");
+
+                assertThat(team).isEqualTo("RED");
+                assertThat(role).isEqualTo("SPYMASTER");
+                assertThat(playerName).isEqualTo("Tano");
         }
 }
