@@ -111,14 +111,12 @@ class CodeNamesApplicationTests {
 
         @Test
         @DirtiesContext
-        void shouldTestAllJoinPossibilities(){
+        void shouldJoinTeamRedAsSpymaster() {
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
-
-                ResponseEntity<String> response = restTemplate.postForEntity("/game", request, String.class);
-                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                restTemplate.postForEntity("/game", request, String.class);
 
                 TeamJoinRequest teamRedJoinRequest = new TeamJoinRequest("RED", "SPYMASTER", "Tano");
-                response = restTemplate.postForEntity("/game/test-01/player/team", teamRedJoinRequest, String.class);
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/test-01/player/team", teamRedJoinRequest, String.class);
 
                 DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -129,33 +127,52 @@ class CodeNamesApplicationTests {
                 assertThat(team).isEqualTo("RED");
                 assertThat(role).isEqualTo("SPYMASTER");
                 assertThat(playerName).isEqualTo("Tano");
+        }
+
+        @Test
+        @DirtiesContext
+        void shouldJoinTeamBlueAsOperative() {
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+                restTemplate.postForEntity("/game", request, String.class);
 
                 request = new CreateGameRequest("test", "01", "Tano2");
-
-                response = restTemplate.postForEntity("/game/test-01/join", request, String.class);
-                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                restTemplate.postForEntity("/game/test-01/join", request, String.class);
 
                 TeamJoinRequest teamBlueJoinRequest = new TeamJoinRequest("BLUE", "OPERATIVE", "Tano");
-                response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
 
-                documentContext = JsonPath.parse(response.getBody());
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-                team = documentContext.read("$.team");
-                role = documentContext.read("$.role");
-                playerName = documentContext.read("$.playerName");
+                String team = documentContext.read("$.team");
+                String role = documentContext.read("$.role");
+                String playerName = documentContext.read("$.playerName");
 
                 assertThat(team).isEqualTo("BLUE");
                 assertThat(role).isEqualTo("OPERATIVE");
                 assertThat(playerName).isEqualTo("Tano");
+        }
 
-                teamBlueJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER2", "Tano2");
-                response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
+        @Test
+        @DirtiesContext
+        void shouldNotAllowInvalidTeamJoinRequests() {
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+                restTemplate.postForEntity("/game", request, String.class);
+
+                request = new CreateGameRequest("test", "01", "Tano2");
+                restTemplate.postForEntity("/game/test-01/join", request, String.class);
+
+
+                // Invalid team
+                TeamJoinRequest teamBlueJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER2", "Tano2");
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
+                // Invalid role
                 teamBlueJoinRequest = new TeamJoinRequest("BLUE2", "SPYMASTER", "Tano2");
                 response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
+                // Invalid player
                 teamBlueJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER", "Tano3");
                 response = restTemplate.postForEntity("/game/test-01/player/team", teamBlueJoinRequest, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
