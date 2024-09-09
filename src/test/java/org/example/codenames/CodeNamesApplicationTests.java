@@ -25,6 +25,7 @@ class CodeNamesApplicationTests {
         TestRestTemplate restTemplate;
 
         @Test
+        @DirtiesContext
         void shouldReturnAGameWhenGameIsCreated(){
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
 
@@ -55,6 +56,7 @@ class CodeNamesApplicationTests {
         }
 
         @Test
+        @DirtiesContext
         void shouldReturnErrorBecausePlayerExists(){
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
 
@@ -69,6 +71,7 @@ class CodeNamesApplicationTests {
 
 
         @Test
+        @DirtiesContext
         void shouldReturnErrorBecauseGameDoesNotExist(){
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
 
@@ -77,6 +80,7 @@ class CodeNamesApplicationTests {
         }
 
         @Test
+        @DirtiesContext
         void shouldReturnErrorBecauseGameIsFull(){
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano1");
 
@@ -106,6 +110,7 @@ class CodeNamesApplicationTests {
         }
 
         @Test
+        @DirtiesContext
         void shouldTestAllJoinPossibilities(){
                 CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
 
