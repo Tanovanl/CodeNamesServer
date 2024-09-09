@@ -59,7 +59,7 @@ public class CodeNamesServiceImpl {
     }
 
 
-    public ResponseEntity<TeamJoinResponse> addPlayer(String gameId, String playerName, String team) {
+    public ResponseEntity<TeamJoinResponse> joinTeam(String gameId, String playerName, String team, String role) {
         Game game = getGameById(gameId);
         if (game == null) {
             throw new IllegalArgumentException("Game not found");
@@ -72,6 +72,7 @@ public class CodeNamesServiceImpl {
         }
 
         Player player = game.getPlayerByName(playerName);
+        player.setRole(Role.valueOf(role));
         player.setTeam(Team.valueOf(team));
         return new ResponseEntity<>(new TeamJoinResponse(player.getTeam(), player.getRole(), playerName), HttpStatus.CREATED);
     }

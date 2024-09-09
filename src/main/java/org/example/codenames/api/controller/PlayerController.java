@@ -36,7 +36,7 @@ public class PlayerController {
     @Operation(summary = "Add player to team", description = "This endpoint adds a player to a team in the game with the provided game ID.")
     @PostMapping("/{gameId}/player/team")
     public ResponseEntity<TeamJoinResponse> addPlayer(@PathVariable String gameId, @RequestBody TeamJoinRequest request){
-        return codeNamesService.addPlayer(gameId, request.getPlayer(), request.getTeam());
+        return codeNamesService.joinTeam(gameId, request.getPlayer(), request.getTeam(), request.getRole());
     }
 
     @Operation(summary = "Assign role to player", description = "This endpoint assigns a role to a player in the game with the provided game ID.")
