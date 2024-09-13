@@ -317,5 +317,27 @@ class CodeNamesApplicationTests {
                 assertThat(score.get("RED")).isEqualTo(0);
         }
 
+        @Test
+        @DirtiesContext
+        void shouldNotBeAbleToGuess(){
+                shouldStartACompleteGame();
+
+                ResponseEntity<String> response = restTemplate.getForEntity("/game/test-01", String.class);
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+                List<Map<String, Object>> blueCards = documentContext.read("$.cards[?(@.color == 'BLUE')]");
+                assertThat(blueCards).isNotEmpty();
+
+                Random random = new Random();
+                Map<String, Object> randomBlueCard = blueCards.get(random.nextInt(blueCards.size()));
+                String cardName = (String) randomBlueCard.get("word");
+                logger.info("Guessing card: " + cardName);
+
+                GuessCardRequest guessCardRequest = new GuessCardRequest("Tano2", cardName);
+                response = restTemplate.postForEntity("/game/test-01", guessCardRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+
+        }
+
 
 }
