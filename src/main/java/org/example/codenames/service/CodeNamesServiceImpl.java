@@ -179,32 +179,32 @@ public class CodeNamesServiceImpl {
 
     private void exceptionsCards(Game game, Player player, String card) {
         if (game == null) {
-            throw new IllegalArgumentException("Game not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
         if (!game.getIsStarted()) {
-            throw new IllegalArgumentException("Game has not started yet");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Game has not started yet");
         }
         if (player == null) {
-            throw new IllegalArgumentException("Player not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found");
         }
         if (player.getRole() != Role.OPERATIVE) {
-            throw new IllegalArgumentException("Only operatives can guess cards");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only operatives can guess cards");
         }
         if (player.getTeam() != game.getTurnToGuess()) {
-            throw new IllegalArgumentException("It is not your turn");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "It is not your turn to guess!");
         }
         if (game.getBoard().getCard(card) == null) {
-            throw new IllegalArgumentException("Card not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found");
         }
         if (game.getBoard().getCard(card).getIsRevealed()) {
-            throw new IllegalArgumentException("Card already revealed");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card already revealed");
         }
     }
 
     public ResponseEntity<Player> getPlayer(String gameId, String playerName) {
         Game game = getGameById(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("Game not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
         Player player = game.getPlayerByName(playerName);
         return new ResponseEntity<>(player, HttpStatus.OK);
