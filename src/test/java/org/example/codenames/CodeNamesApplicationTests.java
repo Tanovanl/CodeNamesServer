@@ -12,11 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CodeNamesApplicationTests {
+
+        Logger logger = Logger.getLogger(CodeNamesApplicationTests.class.getName());
 
         @Autowired
         TestRestTemplate restTemplate;
@@ -223,4 +228,94 @@ class CodeNamesApplicationTests {
                 response = restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
                 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
+
+        @Test
+        @DirtiesContext
+        public void shouldStartACompleteGame(){
+                CreateGameRequest request = new CreateGameRequest("test", "01", "Tano");
+                restTemplate.postForEntity("/game", request, String.class);
+                TeamJoinRequest teamJoinRequest = new TeamJoinRequest("RED", "SPYMASTER", "Tano");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                AddPlayerRequest playerAddRequest = new AddPlayerRequest("Tano2");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("RED", "OPERATIVE", "Tano2");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                playerAddRequest = new AddPlayerRequest("Tano3");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("BLUE", "SPYMASTER", "Tano3");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                playerAddRequest = new AddPlayerRequest("Tano4");
+                restTemplate.postForEntity("/game/test-01/join", playerAddRequest, String.class);
+                teamJoinRequest = new TeamJoinRequest("BLUE", "OPERATIVE", "Tano4");
+                restTemplate.postForEntity("/game/test-01/player/team", teamJoinRequest, String.class);
+
+                StartGameRequest startGameRequest = new StartGameRequest("Tano");
+                restTemplate.postForEntity("/game/test-01/start", startGameRequest, String.class);
+
+                ResponseEntity<String> response = restTemplate.getForEntity("/game/test-01", String.class);
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+                // Verify players
+                List<Map<String, Object>> players = documentContext.read("$.players");
+                assertThat(players).hasSize(4);
+                assertThat(players).extracting("playerName").containsExactlyInAnyOrder("Tano", "Tano2", "Tano3", "Tano4");
+
+                // Verify cards
+                List<Map<String, Object>> cards = documentContext.read("$.cards");
+                assertThat(cards).hasSize(25);
+
+                // Verify game status
+                Boolean isStarted = documentContext.read("$.isStarted");
+                assertThat(isStarted).isTrue();
+
+                // Verify score
+                Map<String, Integer> score = documentContext.read("$.score");
+                assertThat(score.get("BLUE")).isEqualTo(0);
+                assertThat(score.get("RED")).isEqualTo(0);
+
+                // Verify turn
+                String turn = documentContext.read("$.turn");
+                assertThat(turn).isEqualTo("BLUE");
+        }
+
+        @Test
+        @DirtiesContext
+        void shouldGuessCardAndIncreaseScore(){
+                shouldStartACompleteGame();
+
+                ResponseEntity<String> response = restTemplate.getForEntity("/game/test-01", String.class);
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+                List<Map<String, Object>> blueCards = documentContext.read("$.cards[?(@.color == 'BLUE')]");
+                assertThat(blueCards).isNotEmpty();
+
+                Random random = new Random();
+                Map<String, Object> randomBlueCard = blueCards.get(random.nextInt(blueCards.size()));
+                String cardName = (String) randomBlueCard.get("word");
+                logger.info("Guessing card: " + cardName);
+
+                GuessCardRequest guessCardRequest = new GuessCardRequest("Tano4", cardName);
+                response = restTemplate.postForEntity("/game/test-01", guessCardRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                // Verify card is revealed
+                response = restTemplate.getForEntity("/game/test-01", String.class);
+                documentContext = JsonPath.parse(response.getBody());
+
+                List<Map<String, Object>> allBlueCards = documentContext.read("$.cards[?(@.color == 'BLUE')]");
+                Map<String, Object> guessedCard = allBlueCards.stream().filter(c -> c.get("word").equals(cardName)).findFirst().get();
+                logger.info("Guessed card: " + guessedCard);
+                Boolean isRevealed = (Boolean) guessedCard.get("revealed");
+                assertThat(isRevealed).isTrue();
+
+                // Verify score
+                Map<String, Integer> score = documentContext.read("$.score");
+                assertThat(score.get("BLUE")).isEqualTo(1);
+                assertThat(score.get("RED")).isEqualTo(0);
+        }
+
+
 }
