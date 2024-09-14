@@ -27,6 +27,10 @@ public class GetGameDetailsResponse {
         return game.getIsStarted();
     }
 
+    public Boolean getIsStartable(){
+        return game.getIsStartable();
+    }
+
     public Team getTurn(){
         return game.getTurnToGuess();
     }

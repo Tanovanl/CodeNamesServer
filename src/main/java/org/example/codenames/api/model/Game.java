@@ -51,7 +51,7 @@ public class Game {
     }
 
     private boolean canStartGame() {
-        return players.size() >= 4;
+        return players.size() >= 4 && hasRequiredPlayersAndRoles();
     }
 
     public void setIsStarted(boolean isStarted) {
@@ -164,5 +164,9 @@ public class Game {
         } else {
             return null;
         }
+    }
+
+    public Boolean getIsStartable() {
+        return canStartGame();
     }
 }
