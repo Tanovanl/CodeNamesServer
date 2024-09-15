@@ -339,5 +339,85 @@ class CodeNamesApplicationTests {
 
         }
 
+        @Test
+        @DirtiesContext
+        void shouldTestHintAndGuessing() {
+                shouldStartACompleteGame();
+
+                // Give hint
+                String hintWord = "test";
+                int hintNumber = 1;
+                HintRequest hintRequest = new HintRequest("Tano3", hintWord, hintNumber);
+                ResponseEntity<String> response = restTemplate.postForEntity("/game/test-01/hint", hintRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                // Verify hint is set
+                response = restTemplate.getForEntity("/game/test-01", String.class);
+                DocumentContext documentContext = JsonPath.parse(response.getBody());
+                String hint = documentContext.read("$.hintWord");
+                int number = documentContext.read("$.hintNumber");
+                assertThat(hint).isEqualTo(hintWord);
+                assertThat(number).isEqualTo(hintNumber);
+
+                // Guess card
+                List<Map<String, Object>> blueCards = documentContext.read("$.cards[?(@.color == 'BLUE')]");
+                assertThat(blueCards).isNotEmpty();
+
+                Random random = new Random();
+                Map<String, Object> randomBlueCard = blueCards.get(random.nextInt(blueCards.size()));
+                String cardName = (String) randomBlueCard.get("word");
+                logger.info("Guessing card: " + cardName);
+
+                GuessCardRequest guessCardRequest = new GuessCardRequest("Tano4", cardName);
+                response = restTemplate.postForEntity("/game/test-01", guessCardRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                // Verify card is revealed
+                response = restTemplate.getForEntity("/game/test-01", String.class);
+                documentContext = JsonPath.parse(response.getBody());
+
+                List<Map<String, Object>> allBlueCards = documentContext.read("$.cards[?(@.color == 'BLUE')]");
+                Map<String, Object> guessedCard = allBlueCards.stream().filter(c -> c.get("word").equals(cardName)).findFirst().get();
+                logger.info("Guessed card: " + guessedCard);
+                Boolean isRevealed = (Boolean) guessedCard.get("revealed");
+                assertThat(isRevealed).isTrue();
+
+                // Verify score
+                Map<String, Integer> score = documentContext.read("$.score");
+                assertThat(score.get("BLUE")).isEqualTo(1);
+                assertThat(score.get("RED")).isEqualTo(0);
+
+                // Verify red turn
+                String turn = documentContext.read("$.turn");
+                assertThat(turn).isEqualTo("RED");
+
+                // Verfiy red cannot guess
+                List<Map<String, Object>> redCards = documentContext.read("$.cards[?(@.color == 'RED')]");
+                Map<String, Object> randomRedCard = redCards.get(random.nextInt(blueCards.size()));
+                String cardNameRed = (String) randomRedCard.get("word");
+
+                guessCardRequest = new GuessCardRequest("Tano2", cardNameRed);
+                response = restTemplate.postForEntity("/game/test-01", guessCardRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+
+                // Give hint
+                hintWord = "test";
+                hintNumber = 1;
+                hintRequest = new HintRequest("Tano", hintWord, hintNumber);
+                response = restTemplate.postForEntity("/game/test-01/hint", hintRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                // Guess card
+                response = restTemplate.postForEntity("/game/test-01", guessCardRequest, String.class);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                response = restTemplate.getForEntity("/game/test-01", String.class);
+                documentContext = JsonPath.parse(response.getBody());
+                score = documentContext.read("$.score");
+                turn = documentContext.read("$.turn");
+                assertThat(turn).isEqualTo("BLUE");
+                assertThat(score.get("RED")).isEqualTo(1);
+
+        }
 
 }
