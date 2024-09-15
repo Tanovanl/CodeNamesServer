@@ -158,7 +158,14 @@ public class CodeNamesServiceImpl {
         Game game = getGameById(gameId);
         Player player = game.getPlayerByName(playerName);
 
+        // Check if a hint has been given
+        if (game.getHintWord() == null || game.getHintNumber() == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only guess after a hint is given");
+        }
+
         exceptionsCards(game, player, card);
+
+
 
         game.getBoard().getCard(card).setIsRevealed(true);
 
@@ -167,13 +174,18 @@ public class CodeNamesServiceImpl {
         } else if (game.getBoard().getCard(card).getColor().equals(CardColor.BLACK)) {
             game.setScore(player.getTeam(), -100);
             game.setIsStarted(false);
-        } else if (game.getBoard().getCard(card).getColor().equals(CardColor.GRAY)){
-            game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
         } else {
-            game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
             Team oppositeTeam = player.getTeam() == Team.RED ? Team.BLUE : Team.RED;
             game.setScore(oppositeTeam, 1);
         }
+
+        // Reset hint after a guess
+        game.setHintWord(null);
+        game.setHintNumber(0);
+
+        game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
+
+
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
     }
 
@@ -208,5 +220,28 @@ public class CodeNamesServiceImpl {
         }
         Player player = game.getPlayerByName(playerName);
         return new ResponseEntity<>(player, HttpStatus.OK);
+    }
+
+    public ResponseEntity<GiveHintResponse> giveHint(String gameId, String playerName, String hintWord, int hintNumber) {
+        Game game = getGameById(gameId);
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+        Player player = game.getPlayerByName(playerName);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found");
+        }
+        if (!game.getIsStarted()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Game has not started yet");
+        }
+        if (player.getRole() != Role.SPYMASTER) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only spymasters can give hints");
+        }
+        if (player.getTeam() != game.getTurnToGuess()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "It is not your team's turn to give a hint");
+        }
+        game.setHintWord(hintWord);
+        game.setHintNumber(hintNumber);
+        return new ResponseEntity<>(new GiveHintResponse(hintWord, hintNumber), HttpStatus.OK);
     }
 }

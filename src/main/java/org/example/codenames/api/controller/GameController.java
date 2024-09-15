@@ -3,11 +3,9 @@ package org.example.codenames.api.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import org.example.codenames.api.web.Request.CreateGameRequest;
 import org.example.codenames.api.web.Request.GuessCardRequest;
+import org.example.codenames.api.web.Request.HintRequest;
 import org.example.codenames.api.web.Request.StartGameRequest;
-import org.example.codenames.api.web.Response.AllGamesResponse;
-import org.example.codenames.api.web.Response.GameCreateResponse;
-import org.example.codenames.api.web.Response.GetCardsResponse;
-import org.example.codenames.api.web.Response.GetGameDetailsResponse;
+import org.example.codenames.api.web.Response.*;
 import org.example.codenames.service.CodeNamesServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,5 +54,11 @@ public class GameController {
     @PostMapping("/game/{gameId}")
     public ResponseEntity<GetGameDetailsResponse> guessCard(@PathVariable String gameId, @RequestBody GuessCardRequest request){
         return codeNamesService.guessCards(gameId, request.getPlayerName(), request.getCardName());
+    }
+
+    @Operation
+    @PostMapping("/game/{gameId}/hint")
+    public ResponseEntity<GiveHintResponse> giveHint(@PathVariable String gameId, @RequestBody HintRequest request){
+        return codeNamesService.giveHint(gameId, request.getPlayerName(), request.getHintWord(), request.getHintNumber());
     }
 }

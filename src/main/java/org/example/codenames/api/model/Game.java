@@ -18,6 +18,8 @@ public class Game {
     private boolean isStarted;
     private Team currentTurnToGuess;
     private Map<Team, Integer> score;
+    private String hintWord;
+    private int hintNumber;
 
 
     public Game(GameId gameId) {
@@ -169,4 +171,22 @@ public class Game {
     public Boolean getIsStartable() {
         return canStartGame();
     }
+
+    public void setHintWord(String hintWord) {
+        this.hintWord = hintWord;
+        this.hintNumber = hintNumber;
+    }
+
+    public String getHintWord() {
+        return hintWord;
+    }
+
+    public void setHintNumber(int hintNumber) {
+        this.hintNumber = hintNumber;
+    }
+
+    public int getHintNumber() {
+        return hintNumber;
+    }
+
 }

@@ -46,4 +46,12 @@ public class GetGameDetailsResponse {
     public List<Card> getCards(){
         return cards;
     }
+
+    public String getHintWord(){
+        return game.getHintWord();
+    }
+
+    public int getHintNumber(){
+        return game.getHintNumber();
+    }
 }
