@@ -175,15 +175,13 @@ public class CodeNamesServiceImpl {
             game.setScore(player.getTeam(), -100);
             game.setIsStarted(false);
         } else {
-            Team oppositeTeam = player.getTeam() == Team.RED ? Team.BLUE : Team.RED;
-            game.setScore(oppositeTeam, 1);
+            game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
+            game.setHintWord(null);
+            game.setHintNumber(0);
         }
 
-        // Reset hint after a guess
-        game.setHintWord(null);
-        game.setHintNumber(0);
 
-        game.setTurnToGuess(game.getTurnToGuess().equals(Team.RED) ? Team.BLUE : Team.RED);
+
 
 
         return new ResponseEntity<>(new GetGameDetailsResponse(game), HttpStatus.OK);
